@@ -489,7 +489,7 @@ namespace WindowsFormsApp1
         }
         private void NacrtajRutu(RutaSPP rutaCrtanje)
         {
-
+            return;
             gMapControl1.Overlays.Add(RutaOverlay);
             RutaOverlay.Routes.Add(rutaCrtanje.rutaNaKarti);
             //gMapControl1.ZoomAndCenterRoutes(rutaCrtanje.opis);
@@ -1739,18 +1739,21 @@ namespace WindowsFormsApp1
             try
             {
 
-
+                int donja = Convert.ToInt32(txtDonja.Text);
+                int gornja = Convert.ToInt32(txtGornja.Text);
                 Random rnd = new Random();
                 List<Vrh> listvrhova = sviVrhovi.Values.ToList();
-                StreamWriter pisanje = new StreamWriter("SIMULACIJA.txt");
-                int brojac10 = 0;
-                int brojac1050 = 0;
-                int brojac50100 = 0;
-                int brojac100 = 0;
-                double[] rezultat = new double[7];
-                pisanje.WriteLine("KATEGORIJA; A*; A* bez fibonaccija; Dijkstra; Dijkstra bez Fib; BiDijkstra; BiA*; GBFS");
-                while (brojac10 < 100)
+                StreamWriter pisanje = new StreamWriter($"SIMULACIJA_{donja}_{gornja}.txt");
+                int brojac = 0;
+                //int brojac1050 = 0;
+                //int brojac50100 = 0;
+                //int brojac100 = 0;
+                
+                pisanje.Write("A*(vrijemeIzvan);A*(vrijemeUnutar);A*(udaljenostIzračunata);A*(udaljenostStvarna);A*(udaljenostHeuristika);A* bez fibonaccija(vrijemeIzvan);A* bez fibonaccija(vrijemeUnutar);A* bez fibonaccija(udaljenostIzračunata);A* bez fibonaccijaudaljenostStvarna);A* bez fibonaccija(udaljenostHeuristika);Dijkstra(vrijemeIzvan);Dijkstra(vrijemeUnutar);Dijkstra(udaljenostIzračunata);Dijkstra(udaljenostStvarna);Dijkstra(udaljenostHeuristika);Dijkstra bez Fib(vrijemeIzvan);Dijkstra bez Fib(vrijemeUnutar);Dijkstra bez Fib(udaljenostIzračunata);Dijkstra bez Fib(udaljenostStvarna);Dijkstra bez Fib(udaljenostHeuristika);BiDijkstra(vrijemeIzvan);BiDijkstra(vrijemeUnutar);BiDijkstra(udaljenostIzračunata);BiDijkstra(udaljenostStvarna);BiDijkstra(udaljenostHeuristika);BiA*(vrijemeIzvan);BiA*(vrijemeUnutar);BiA*(udaljenostIzračunata);BiA*(udaljenostStvarna);BiA*(udaljenostHeuristika);GBFS(vrijemeIzvan);GBFS(vrijemeUnutar);GBFS(udaljenostIzračunata);GBFS(udaljenostStvarna);GBFS(udaljenostHeuristika)\r\n");
+
+                while (brojac < 1000)
                 {
+                    List<double[]> rezultat = new List<double[]>();
                     int indeksPoc = rnd.Next(listvrhova.Count);
                     Vrh vrhPocetak = listvrhova[indeksPoc];
 
@@ -1759,162 +1762,188 @@ namespace WindowsFormsApp1
 
                     double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
 
-                    if (vrhPocetak == vrhKraj || (udaljenost < 100 || udaljenost > 10000))
+                    if (vrhPocetak == vrhKraj || (udaljenost < donja || udaljenost > gornja))
                     {
                         continue;
                     }
-                    else if (udaljenost > 0 && udaljenost <= 10000 && brojac10 < 100)
-                    {
-                        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                        brojac10++;
-                        pisanje.Write("<10;");
-                        for (int i = 0; i < rezultat.Length; i++)
+                    else if (udaljenost > donja && udaljenost <= gornja && brojac < 1000)
+                    { 
+                        double[] t1 = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
+                        if (t1 == null) continue;
+                        rezultat.Add(t1);
+                        double[] t2 = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
+                        if (t2 == null) continue;
+                        rezultat.Add(t2);
+                        double[] t3 = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
+                        if (t3 == null) continue;
+                        rezultat.Add(t3);
+                        double[] t4 = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
+                        if (t4 == null) continue;
+                        rezultat.Add(t4);
+                        double[] t5 = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
+                        if (t5 == null) continue;
+                        rezultat.Add(t5);
+                        double[] t6 = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
+                        if (t6 == null) continue;
+                        rezultat.Add(t6);
+                        double[] t7 = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
+                        if (t7 == null) continue;
+                        rezultat.Add(t7);
+                        brojac++;
+                        //pisanje.Write("<10;");
+                        for (int i = 0; i < rezultat.Count; i++)
                         {
-                            if (i > 0)
+                            for(int j = 0; j < rezultat[i].Length; j++)
                             {
-                                pisanje.Write(";");
+
+                                pisanje.Write(rezultat[i][j]);
+                                if (!(i == rezultat.Count - 1 && j == rezultat[i].Length - 1))
+                                {
+                                    pisanje.Write(";");
+                                }
                             }
-                            pisanje.Write(rezultat[i]);
+                            
                         }
                         pisanje.WriteLine();
+                        pisanje.Flush();
 
                     }
                 }
-                while (brojac1050 < 100)
-                {
-                    int indeksPoc = rnd.Next(listvrhova.Count);
-                    Vrh vrhPocetak = listvrhova[indeksPoc];
+                //while (brojac1050 < 100)
+                //{
+                //    int indeksPoc = rnd.Next(listvrhova.Count);
+                //    Vrh vrhPocetak = listvrhova[indeksPoc];
 
-                    int indeksKraj = rnd.Next(listvrhova.Count);
-                    Vrh vrhKraj = listvrhova[indeksKraj];
+                //    int indeksKraj = rnd.Next(listvrhova.Count);
+                //    Vrh vrhKraj = listvrhova[indeksKraj];
 
-                    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
+                //    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
 
-                    if (vrhPocetak == vrhKraj || udaljenost < 10000 || udaljenost > 50000)
-                    {
-                        continue;
-                    }
-                    else if (udaljenost > 10000 && udaljenost <= 50000 && brojac1050 < 100)
-                    {
-                        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                        brojac1050++;
-                        pisanje.Write(">10&&<50;");
-                        for (int i = 0; i < rezultat.Length; i++)
-                        {
-                            if (i > 0)
-                            {
-                                pisanje.Write(";");
-                            }
-                            pisanje.Write(rezultat[i]);
-                        }
-                        pisanje.WriteLine();
+                //    if (vrhPocetak == vrhKraj || udaljenost < 10000 || udaljenost > 50000)
+                //    {
+                //        continue;
+                //    }
+                //    else if (udaljenost > 10000 && udaljenost <= 50000 && brojac1050 < 100)
+                //    {
+                //        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
+                //        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
+                //        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
+                //        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
+                //        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
+                //        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
+                //        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
+                //        brojac1050++;
+                //        pisanje.Write(">10&&<50;");
+                //        for (int i = 0; i < rezultat.Length; i++)
+                //        {
+                //            if (i > 0)
+                //            {
+                //                pisanje.Write(";");
+                //            }
+                //            pisanje.Write(rezultat[i]);
+                //        }
+                //        pisanje.WriteLine();
 
-                    }
-                }
+                //    }
+                //}
 
-                while (brojac50100 < 100)
-                {
-                    int indeksPoc = rnd.Next(listvrhova.Count);
-                    Vrh vrhPocetak = listvrhova[indeksPoc];
+                //while (brojac50100 < 100)
+                //{
+                //    int indeksPoc = rnd.Next(listvrhova.Count);
+                //    Vrh vrhPocetak = listvrhova[indeksPoc];
 
-                    int indeksKraj = rnd.Next(listvrhova.Count);
-                    Vrh vrhKraj = listvrhova[indeksKraj];
+                //    int indeksKraj = rnd.Next(listvrhova.Count);
+                //    Vrh vrhKraj = listvrhova[indeksKraj];
 
-                    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
+                //    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
 
-                    if (vrhPocetak == vrhKraj || udaljenost < 50000 || udaljenost > 100000)
-                    {
-                        continue;
-                    }
-                    else if (udaljenost > 50000 && udaljenost <= 100000 && brojac50100 < 100)
-                    {
-                        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                        brojac50100++;
-                        pisanje.Write(">50&&<100;");
-                        for (int i = 0; i < rezultat.Length; i++)
-                        {
-                            if (i > 0)
-                            {
-                                pisanje.Write(";");
-                            }
-                            pisanje.Write(rezultat[i]);
-                        }
-                        pisanje.WriteLine();
+                //    if (vrhPocetak == vrhKraj || udaljenost < 50000 || udaljenost > 100000)
+                //    {
+                //        continue;
+                //    }
+                //    else if (udaljenost > 50000 && udaljenost <= 100000 && brojac50100 < 100)
+                //    {
+                //        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
+                //        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
+                //        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
+                //        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
+                //        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
+                //        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
+                //        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
+                //        brojac50100++;
+                //        pisanje.Write(">50&&<100;");
+                //        for (int i = 0; i < rezultat.Length; i++)
+                //        {
+                //            if (i > 0)
+                //            {
+                //                pisanje.Write(";");
+                //            }
+                //            pisanje.Write(rezultat[i]);
+                //        }
+                //        pisanje.WriteLine();
 
 
-                    }
-                }
-                while (brojac100 < 100)
-                {
-                    int indeksPoc = rnd.Next(listvrhova.Count);
-                    Vrh vrhPocetak = listvrhova[indeksPoc];
+                //    }
+                //}
+                //while (brojac100 < 100)
+                //{
+                //    int indeksPoc = rnd.Next(listvrhova.Count);
+                //    Vrh vrhPocetak = listvrhova[indeksPoc];
 
-                    int indeksKraj = rnd.Next(listvrhova.Count);
-                    Vrh vrhKraj = listvrhova[indeksKraj];
+                //    int indeksKraj = rnd.Next(listvrhova.Count);
+                //    Vrh vrhKraj = listvrhova[indeksKraj];
 
-                    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
+                //    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
 
-                    if (vrhPocetak == vrhKraj || udaljenost < 100000)
-                    {
-                        continue;
-                    }
-                    else if (udaljenost > 100000 && brojac100 < 100)
-                    {
-                        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                        brojac100++;
+                //    if (vrhPocetak == vrhKraj || udaljenost < 100000)
+                //    {
+                //        continue;
+                //    }
+                //    else if (udaljenost > 100000 && brojac100 < 100)
+                //    {
+                //        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
+                //        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
+                //        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
+                //        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
+                //        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
+                //        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
+                //        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
+                //        brojac100++;
 
-                        pisanje.Write(">100;");
-                        for (int i = 0; i < rezultat.Length; i++)
-                        {
-                            if (i > 0)
-                            {
-                                pisanje.Write(";");
-                            }
-                            pisanje.Write(rezultat[i]);
-                        }
-                        pisanje.WriteLine();
-                    }
+                //        pisanje.Write(">100;");
+                //        for (int i = 0; i < rezultat.Length; i++)
+                //        {
+                //            if (i > 0)
+                //            {
+                //                pisanje.Write(";");
+                //            }
+                //            pisanje.Write(rezultat[i]);
+                //        }
+                //        pisanje.WriteLine();
+                //    }
 
-                }
+                //}
 
                 pisanje.Flush();
                 pisanje.Close();
+                MessageBox.Show("Gotov!");
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Error in Simulacija" + ex.Message);
             }
         }
-        private static double IzracunVremena(Func<RutaSPP> algoritam)
+        private static double[] IzracunVremena(Func<RutaSPP> algoritam)
         {
             Stopwatch sw = Stopwatch.StartNew();
             RutaSPP rezultat = algoritam();
             sw.Stop();
-            return sw.Elapsed.TotalMilliseconds;
+            if (rezultat == null)
+            {
+                return null;
+            }
+            return new double[]{ sw.Elapsed.TotalMilliseconds, rezultat.vrijemeIzračuna,
+                rezultat.udaljenostIzračunata, rezultat.udaljenostStvarna, rezultat.udaljenostHeuristika };
         }
 
     }
