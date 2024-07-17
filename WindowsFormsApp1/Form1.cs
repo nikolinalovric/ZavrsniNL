@@ -26,6 +26,7 @@ namespace WindowsFormsApp1
         int brojmarkera = 0;
         bool AlgoritamSpreman;
         GMapOverlay RutaOverlay = new GMapOverlay("rutaOverlay");
+        // Klasa Vrh za pohranu podataka iz datoteke
         public class Vrh
         {
             public int RoadID { get; set; }
@@ -45,7 +46,7 @@ namespace WindowsFormsApp1
             public string status { get; set; }
             public List<double> exact_points { get; set; }
             public GMapMarker marker { get; set; }
-
+            // dio za graf
             public double tezina { get; set; }
             public Vrh prethodni { get; set; }
             public bool obraden { get; set; }
@@ -55,6 +56,7 @@ namespace WindowsFormsApp1
             sviVrhovi = new Dictionary<int, Vrh>();
             InitializeComponent();
             this.Resize += new EventHandler(MapaResize);
+            // Ucitavanje podataka iz datoteke u stvorenu klasu 
             try
             {
                 citanje = new StreamReader("CompleteMireoMapV2.txt");
@@ -111,6 +113,7 @@ namespace WindowsFormsApp1
                             jedanVrh.linkoviPrijeZaBiDijkstru.Add(Convert.ToInt32(prethodni[i]));
                         }
                     }
+                    // stvaranje cestovne mreže
                     sviVrhovi[jedanVrh.RoadID] = jedanVrh;
                     //Vrhovi.exact_points = new List<double>();
                     //string [] ep = l[14].Split('|');
@@ -166,6 +169,7 @@ namespace WindowsFormsApp1
             }
 
         }
+        
         private void MapaResize(object sender, EventArgs e)
         {
             int margin = 10;
@@ -174,7 +178,7 @@ namespace WindowsFormsApp1
             gMapControl1.Location = new Point(margin, margin);
 
         }
-
+        // Metoda za prikaz Hrvatske i postavljanje Zagreba u centar mape
         private void gMapControl1_Load(object sender, EventArgs e)
         {
             gMapControl1.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
@@ -197,13 +201,7 @@ namespace WindowsFormsApp1
             listamarkera.Clear();
             imapocetnimarker = false;
         }
-
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private Vrh PronadiNajbliziLink(PointLatLng point)
         {
             Vrh v3 = null;
@@ -277,6 +275,7 @@ namespace WindowsFormsApp1
             return d;
 
         }
+        // Metoda za stavljanje pocetnog markera
         private void pocetniMarker(PointLatLng tocka, Vrh v)
         {
             var marker = new GMarkerGoogle(tocka, GMarkerGoogleType.blue_pushpin);
@@ -285,6 +284,7 @@ namespace WindowsFormsApp1
             markeri.Markers.Add(marker);
             MessageBox.Show("ID ovog linka je: " + pocetak.RoadID);
         }
+        // Metoda za stavljanje krajnjeg markera
         private void zavrsniMarker(PointLatLng tocka, Vrh v)
         {
             var marker = new GMarkerGoogle(tocka, GMarkerGoogleType.red_pushpin);
@@ -361,7 +361,7 @@ namespace WindowsFormsApp1
             }
 
         }
-
+        // Metoda za A* algoritam implementiran s Fibonaccijevom hrpom
         private RutaSPP AstarAlgoritam(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -481,21 +481,22 @@ namespace WindowsFormsApp1
 
             return null;
         }
-
-
+        
+        // Metoda za izračun heurističke vrijednosti
         private double heuristickaVrijednost(Vrh trenutni, Vrh cilj)
         {
             return airalDistHaversine((trenutni.pocetakX + trenutni.krajX) / 2, (trenutni.pocetakY + trenutni.krajY) / 2, (cilj.pocetakX + cilj.krajX) / 2, (cilj.pocetakY + cilj.krajY) / 2);
         }
+        // Metoda za crtanje rute
         private void NacrtajRutu(RutaSPP rutaCrtanje)
         {
-            return;
+       
             gMapControl1.Overlays.Add(RutaOverlay);
             RutaOverlay.Routes.Add(rutaCrtanje.rutaNaKarti);
             //gMapControl1.ZoomAndCenterRoutes(rutaCrtanje.opis);
         }
 
-
+        // Metoda za Dijkstru, implementiran s Fibonaccijevom hrpom
         public RutaSPP Dijkstra(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -632,139 +633,11 @@ namespace WindowsFormsApp1
             }
         }
 
-        //private RutaSPP DijkstraKnez(Vrh pocetak, Vrh kraj)
-        //{
-        //    DateTime vStart = DateTime.Now;
-        //    Dictionary<int, FibonacciHeapNode<Vrh, double>> sviUHeapu = new Dictionary<int, FibonacciHeapNode<Vrh, double>>();
-        //    FibonacciHeap<Vrh, double> heap = new FibonacciHeap<Vrh, double>(double.MaxValue);
-        //    FibonacciHeapNode<Vrh, double> pocetakHeapNode = null;
-        //    foreach (Vrh vReset in sviVrhovi.Values)
-        //    {
-        //        vReset.tezina = double.MaxValue;
-        //        vReset.obraden = false;
-        //        vReset.prethodni = null;
-        //        FibonacciHeapNode<Vrh, double> node = new FibonacciHeapNode<Vrh, double>(vReset, vReset.tezina);
-        //        if (vReset == pocetak)
-        //        {
-        //            vReset.tezina = 0;
-        //            pocetakHeapNode = node;
-        //        }
-        //        else
-        //        {
-        //            heap.Insert(node);
-        //        }
-        //        sviUHeapu[vReset.RoadID] = node;
-        //    }
-        //    int i = 0;
-        //    Vrh v1;
-        //    while (!heap.IsEmpty())
-        //    {
-        //        FibonacciHeapNode<Vrh, double> najbolji = null;
-        //        if (i == 0)
-        //        {
-        //            najbolji = pocetakHeapNode;
-        //            i++;
-        //        }
-        //        else
-        //        {
-        //            najbolji = heap.RemoveMin();
-        //        }
-        //        najbolji.Data.obraden = true;
-        //        if (najbolji.Data.RoadID == kraj.RoadID)
-        //        {
-
-        //            break;
-        //        }
-        //        if (!heap.IsEmpty())
-        //        {
-        //            v1 = najbolji.Data;
-        //            foreach (int linkID in v1.susjedniLink)
-        //            {
-        //                if (sviVrhovi.ContainsKey(linkID))
-        //                {
-        //                    Vrh v2 = sviVrhovi[linkID];
-        //                    if (v2.obraden)
-        //                    {
-        //                        continue;
-        //                    }
-        //                    if (v2.tezina > v1.tezina + v1.duljinauMetrima)
-        //                    {
-        //                        FibonacciHeapNode<Vrh, double> nodeToUpdate = sviUHeapu[v2.RoadID];
-        //                        v2.tezina = v1.tezina + v1.duljinauMetrima;
-        //                        v2.prethodni = v1;
-        //                        heap.DecreaseKey(nodeToUpdate, v2.tezina);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    DateTime vEnd = DateTime.Now;
-        //    //Izrada puta            
-        //    RutaSPP rutaKnez = new RutaSPP();
-
-
-
-
-
-
-        //    rutaKnez.listaLinkova = new List<int>();
-        //    rutaKnez.udaljenostStvarna = 0;
-        //    rutaKnez.udaljenostIzračunata = kraj.tezina;
-        //    rutaKnez.opis = "DijkstraKnez";
-        //    rutaKnez.vrijemeIzračuna = (vEnd - vStart).TotalMilliseconds;
-        //    rutaKnez.rutaNaKarti = new GMapRoute(new List<PointLatLng>(), "ruta" + rutaKnez.opis);
-        //    Vrh trenutni = kraj;
-        //    do
-        //    {
-        //        if (trenutni != kraj)
-        //        {
-        //            rutaKnez.udaljenostStvarna += trenutni.duljinauMetrima;
-        //        }
-        //        rutaKnez.listaLinkova.Insert(0, trenutni.RoadID);
-        //        rutaKnez.rutaNaKarti.Points.Add(new PointLatLng(trenutni.pocetakY, trenutni.pocetakX));
-        //        rutaKnez.rutaNaKarti.Points.Add(new PointLatLng(trenutni.krajY, trenutni.krajX));
-        //        trenutni = trenutni.prethodni;
-        //    } while (trenutni != null);
-
-        //    //rutaKnez.udaljenostStvarna += pocetak.duljinauMetrima;
-        //    //rutaKnez.rutaNaKarti.Points.Add(new PointLatLng(trenutni.pocetakY, trenutni.pocetakX));
-        //    //rutaNaKarti.Points.Add(new PointLatLng(trenutni.krajY, trenutni.krajX));
-        //    rutaKnez.rutaNaKarti.Stroke = new Pen(Color.Green, 3);
-        //    NacrtajRutu(rutaKnez);
-        //    return rutaKnez;
-        //}
-
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (AlgoritamSpreman && brojmarkera == 2)
-        //        {
-
-        //            RutaSPP rutaDijkstra = DijkstraKnez(pocetak, kraj);
-        //            if (rutaDijkstra != null)
-        //            {
-        //                MessageBox.Show("Ruta je pronađena! Detalji\n " + rutaDijkstra.Detalji());
-
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("Ruta nije pronađena");
-        //            }
-
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message);
-        //    }
-        //}
-
         private void btnObrisiRutu_Click(object sender, EventArgs e)
         {
             RutaOverlay.Routes.Clear();
         }
-
+        // Metoda za GBFS algoritam s Fibonaccijevom hrpom
         private RutaSPP GreedyBestFirstSearch(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -880,6 +753,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(ex.Message);
             }
         }
+        // Metoda za dvosmjerni Dijkstra algoritam s Fibonaccijevom hrpom 
         private RutaSPP BidirectionalDijkstra(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -1129,7 +1003,7 @@ namespace WindowsFormsApp1
                 return false;
             }
         }
-
+        // Klasa za predstavljanje i prikaz rute
         public class RutaSPP
         {
             public List<int> listaLinkova;
@@ -1181,8 +1055,6 @@ namespace WindowsFormsApp1
                 s += "Opis: " + opis;
                 return s;
             }
-
-
         }
 
         private void btnAStarBezFibonacci_Click(object sender, EventArgs e)
@@ -1210,7 +1082,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(ex.Message);
             }
         }
-      
+      // Metoda za A* algoritam implementiran bez Fibonaccijeve hrpe
         private RutaSPP AstarBezFibonaccija(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -1361,6 +1233,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(ex.Message);
             }
         }
+        // Metoda za Dijkstra algoritam implementiran bez Fibonaccijeve hrpe
         public RutaSPP DijkstraBezFib(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -1508,7 +1381,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(ex.Message);
             }
         }
-
+        // Metoda za dvosmjerni A* algoritam implementiran s Fibonaccijevom hrpom
         private RutaSPP BidirectionalAStar(Vrh pocetak, Vrh kraj)
         {
             DateTime vStart = DateTime.Now;
@@ -1734,6 +1607,7 @@ namespace WindowsFormsApp1
         {
             Simulacija();
         }
+        // Simulacija za usporedbu implementiranih algoritama
         private void Simulacija()
         {
             try
@@ -1809,121 +1683,7 @@ namespace WindowsFormsApp1
 
                     }
                 }
-                //while (brojac1050 < 100)
-                //{
-                //    int indeksPoc = rnd.Next(listvrhova.Count);
-                //    Vrh vrhPocetak = listvrhova[indeksPoc];
-
-                //    int indeksKraj = rnd.Next(listvrhova.Count);
-                //    Vrh vrhKraj = listvrhova[indeksKraj];
-
-                //    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
-
-                //    if (vrhPocetak == vrhKraj || udaljenost < 10000 || udaljenost > 50000)
-                //    {
-                //        continue;
-                //    }
-                //    else if (udaljenost > 10000 && udaljenost <= 50000 && brojac1050 < 100)
-                //    {
-                //        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                //        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                //        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                //        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                //        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                //        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                //        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                //        brojac1050++;
-                //        pisanje.Write(">10&&<50;");
-                //        for (int i = 0; i < rezultat.Length; i++)
-                //        {
-                //            if (i > 0)
-                //            {
-                //                pisanje.Write(";");
-                //            }
-                //            pisanje.Write(rezultat[i]);
-                //        }
-                //        pisanje.WriteLine();
-
-                //    }
-                //}
-
-                //while (brojac50100 < 100)
-                //{
-                //    int indeksPoc = rnd.Next(listvrhova.Count);
-                //    Vrh vrhPocetak = listvrhova[indeksPoc];
-
-                //    int indeksKraj = rnd.Next(listvrhova.Count);
-                //    Vrh vrhKraj = listvrhova[indeksKraj];
-
-                //    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
-
-                //    if (vrhPocetak == vrhKraj || udaljenost < 50000 || udaljenost > 100000)
-                //    {
-                //        continue;
-                //    }
-                //    else if (udaljenost > 50000 && udaljenost <= 100000 && brojac50100 < 100)
-                //    {
-                //        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                //        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                //        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                //        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                //        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                //        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                //        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                //        brojac50100++;
-                //        pisanje.Write(">50&&<100;");
-                //        for (int i = 0; i < rezultat.Length; i++)
-                //        {
-                //            if (i > 0)
-                //            {
-                //                pisanje.Write(";");
-                //            }
-                //            pisanje.Write(rezultat[i]);
-                //        }
-                //        pisanje.WriteLine();
-
-
-                //    }
-                //}
-                //while (brojac100 < 100)
-                //{
-                //    int indeksPoc = rnd.Next(listvrhova.Count);
-                //    Vrh vrhPocetak = listvrhova[indeksPoc];
-
-                //    int indeksKraj = rnd.Next(listvrhova.Count);
-                //    Vrh vrhKraj = listvrhova[indeksKraj];
-
-                //    double udaljenost = airalDistHaversine(vrhPocetak.pocetakX, vrhPocetak.pocetakY, vrhKraj.pocetakX, vrhKraj.pocetakY);
-
-                //    if (vrhPocetak == vrhKraj || udaljenost < 100000)
-                //    {
-                //        continue;
-                //    }
-                //    else if (udaljenost > 100000 && brojac100 < 100)
-                //    {
-                //        rezultat[0] = IzracunVremena(() => AstarAlgoritam(vrhPocetak, vrhKraj));
-                //        rezultat[1] = IzracunVremena(() => AstarBezFibonaccija(vrhPocetak, vrhKraj));
-                //        rezultat[2] = IzracunVremena(() => Dijkstra(vrhPocetak, vrhKraj));
-                //        rezultat[3] = IzracunVremena(() => DijkstraBezFib(vrhPocetak, vrhKraj));
-                //        rezultat[4] = IzracunVremena(() => BidirectionalDijkstra(vrhPocetak, vrhKraj));
-                //        rezultat[5] = IzracunVremena(() => BidirectionalAStar(vrhPocetak, vrhKraj));
-                //        rezultat[6] = IzracunVremena(() => GreedyBestFirstSearch(vrhPocetak, vrhKraj));
-                //        brojac100++;
-
-                //        pisanje.Write(">100;");
-                //        for (int i = 0; i < rezultat.Length; i++)
-                //        {
-                //            if (i > 0)
-                //            {
-                //                pisanje.Write(";");
-                //            }
-                //            pisanje.Write(rezultat[i]);
-                //        }
-                //        pisanje.WriteLine();
-                //    }
-
-                //}
-
+                
                 pisanje.Flush();
                 pisanje.Close();
                 MessageBox.Show("Gotov!");

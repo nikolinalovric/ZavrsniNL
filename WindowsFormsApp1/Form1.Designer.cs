@@ -53,8 +53,7 @@
             this.gMapControl1.GrayScaleMode = false;
             this.gMapControl1.HelperLineOption = GMap.NET.WindowsForms.HelperLineOptions.DontShow;
             this.gMapControl1.LevelsKeepInMemory = 5;
-            this.gMapControl1.Location = new System.Drawing.Point(124, 15);
-            this.gMapControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gMapControl1.Location = new System.Drawing.Point(105, 12);
             this.gMapControl1.MarkersEnabled = true;
             this.gMapControl1.MaxZoom = 2;
             this.gMapControl1.MinZoom = 2;
@@ -68,7 +67,7 @@
             this.gMapControl1.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.gMapControl1.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.gMapControl1.ShowTileGridLines = false;
-            this.gMapControl1.Size = new System.Drawing.Size(927, 524);
+            this.gMapControl1.Size = new System.Drawing.Size(695, 426);
             this.gMapControl1.TabIndex = 0;
             this.gMapControl1.Zoom = 0D;
             this.gMapControl1.Load += new System.EventHandler(this.gMapControl1_Load);
@@ -76,10 +75,9 @@
             // 
             // btnObrisi
             // 
-            this.btnObrisi.Location = new System.Drawing.Point(16, 343);
-            this.btnObrisi.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnObrisi.Location = new System.Drawing.Point(12, 279);
             this.btnObrisi.Name = "btnObrisi";
-            this.btnObrisi.Size = new System.Drawing.Size(100, 57);
+            this.btnObrisi.Size = new System.Drawing.Size(75, 46);
             this.btnObrisi.TabIndex = 1;
             this.btnObrisi.Text = "Obriši markere";
             this.btnObrisi.UseVisualStyleBackColor = true;
@@ -87,10 +85,9 @@
             // 
             // btnAstar
             // 
-            this.btnAstar.Location = new System.Drawing.Point(16, 15);
-            this.btnAstar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAstar.Location = new System.Drawing.Point(12, 12);
             this.btnAstar.Name = "btnAstar";
-            this.btnAstar.Size = new System.Drawing.Size(100, 28);
+            this.btnAstar.Size = new System.Drawing.Size(75, 23);
             this.btnAstar.TabIndex = 3;
             this.btnAstar.Text = "A* ";
             this.btnAstar.UseVisualStyleBackColor = true;
@@ -98,14 +95,12 @@
             // 
             // timer1
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // btnDijkstra
             // 
-            this.btnDijkstra.Location = new System.Drawing.Point(16, 86);
-            this.btnDijkstra.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDijkstra.Location = new System.Drawing.Point(12, 70);
             this.btnDijkstra.Name = "btnDijkstra";
-            this.btnDijkstra.Size = new System.Drawing.Size(100, 28);
+            this.btnDijkstra.Size = new System.Drawing.Size(75, 23);
             this.btnDijkstra.TabIndex = 4;
             this.btnDijkstra.Text = "Dijkstra";
             this.btnDijkstra.UseVisualStyleBackColor = true;
@@ -113,10 +108,9 @@
             // 
             // btnObrisiRutu
             // 
-            this.btnObrisiRutu.Location = new System.Drawing.Point(17, 407);
-            this.btnObrisiRutu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnObrisiRutu.Location = new System.Drawing.Point(13, 331);
             this.btnObrisiRutu.Name = "btnObrisiRutu";
-            this.btnObrisiRutu.Size = new System.Drawing.Size(100, 28);
+            this.btnObrisiRutu.Size = new System.Drawing.Size(75, 23);
             this.btnObrisiRutu.TabIndex = 6;
             this.btnObrisiRutu.Text = "Obriši rutu";
             this.btnObrisiRutu.UseVisualStyleBackColor = true;
@@ -124,10 +118,9 @@
             // 
             // btnGBFS
             // 
-            this.btnGBFS.Location = new System.Drawing.Point(17, 159);
-            this.btnGBFS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnGBFS.Location = new System.Drawing.Point(13, 129);
             this.btnGBFS.Name = "btnGBFS";
-            this.btnGBFS.Size = new System.Drawing.Size(100, 59);
+            this.btnGBFS.Size = new System.Drawing.Size(75, 48);
             this.btnGBFS.TabIndex = 7;
             this.btnGBFS.Text = "Greedy Best-First Search";
             this.btnGBFS.UseVisualStyleBackColor = true;
@@ -135,10 +128,9 @@
             // 
             // btnBiDijkstra
             // 
-            this.btnBiDijkstra.Location = new System.Drawing.Point(17, 225);
-            this.btnBiDijkstra.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnBiDijkstra.Location = new System.Drawing.Point(13, 183);
             this.btnBiDijkstra.Name = "btnBiDijkstra";
-            this.btnBiDijkstra.Size = new System.Drawing.Size(100, 58);
+            this.btnBiDijkstra.Size = new System.Drawing.Size(75, 47);
             this.btnBiDijkstra.TabIndex = 8;
             this.btnBiDijkstra.Text = "Bidirectional Dijkstra";
             this.btnBiDijkstra.UseVisualStyleBackColor = true;
@@ -146,10 +138,9 @@
             // 
             // btnAStarBezFibonacci
             // 
-            this.btnAStarBezFibonacci.Location = new System.Drawing.Point(16, 50);
-            this.btnAStarBezFibonacci.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAStarBezFibonacci.Location = new System.Drawing.Point(12, 41);
             this.btnAStarBezFibonacci.Name = "btnAStarBezFibonacci";
-            this.btnAStarBezFibonacci.Size = new System.Drawing.Size(100, 28);
+            this.btnAStarBezFibonacci.Size = new System.Drawing.Size(75, 23);
             this.btnAStarBezFibonacci.TabIndex = 9;
             this.btnAStarBezFibonacci.Text = "A* bez fibonaccija";
             this.btnAStarBezFibonacci.UseVisualStyleBackColor = true;
@@ -157,10 +148,9 @@
             // 
             // btnDijkstraBezFibonaccija
             // 
-            this.btnDijkstraBezFibonaccija.Location = new System.Drawing.Point(17, 123);
-            this.btnDijkstraBezFibonaccija.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnDijkstraBezFibonaccija.Location = new System.Drawing.Point(13, 100);
             this.btnDijkstraBezFibonaccija.Name = "btnDijkstraBezFibonaccija";
-            this.btnDijkstraBezFibonaccija.Size = new System.Drawing.Size(100, 28);
+            this.btnDijkstraBezFibonaccija.Size = new System.Drawing.Size(75, 23);
             this.btnDijkstraBezFibonaccija.TabIndex = 10;
             this.btnDijkstraBezFibonaccija.Text = "Dijkstra bez fibonaccija";
             this.btnDijkstraBezFibonaccija.UseVisualStyleBackColor = true;
@@ -168,10 +158,9 @@
             // 
             // btnBiAStar
             // 
-            this.btnBiAStar.Location = new System.Drawing.Point(17, 290);
-            this.btnBiAStar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnBiAStar.Location = new System.Drawing.Point(13, 236);
             this.btnBiAStar.Name = "btnBiAStar";
-            this.btnBiAStar.Size = new System.Drawing.Size(100, 46);
+            this.btnBiAStar.Size = new System.Drawing.Size(75, 37);
             this.btnBiAStar.TabIndex = 11;
             this.btnBiAStar.Text = "Bidirectional A*";
             this.btnBiAStar.UseVisualStyleBackColor = true;
@@ -179,10 +168,9 @@
             // 
             // btnSimulacija
             // 
-            this.btnSimulacija.Location = new System.Drawing.Point(17, 443);
-            this.btnSimulacija.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSimulacija.Location = new System.Drawing.Point(13, 360);
             this.btnSimulacija.Name = "btnSimulacija";
-            this.btnSimulacija.Size = new System.Drawing.Size(100, 28);
+            this.btnSimulacija.Size = new System.Drawing.Size(75, 23);
             this.btnSimulacija.TabIndex = 12;
             this.btnSimulacija.Text = "Simulacija";
             this.btnSimulacija.UseVisualStyleBackColor = true;
@@ -190,23 +178,25 @@
             // 
             // txtDonja
             // 
-            this.txtDonja.Location = new System.Drawing.Point(12, 488);
+            this.txtDonja.Location = new System.Drawing.Point(13, 388);
+            this.txtDonja.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtDonja.Name = "txtDonja";
-            this.txtDonja.Size = new System.Drawing.Size(100, 22);
+            this.txtDonja.Size = new System.Drawing.Size(73, 20);
             this.txtDonja.TabIndex = 13;
             // 
             // txtGornja
             // 
-            this.txtGornja.Location = new System.Drawing.Point(13, 516);
+            this.txtGornja.Location = new System.Drawing.Point(13, 412);
+            this.txtGornja.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtGornja.Name = "txtGornja";
-            this.txtGornja.Size = new System.Drawing.Size(100, 22);
+            this.txtGornja.Size = new System.Drawing.Size(74, 20);
             this.txtGornja.TabIndex = 14;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1083, 615);
+            this.ClientSize = new System.Drawing.Size(812, 449);
             this.Controls.Add(this.txtGornja);
             this.Controls.Add(this.txtDonja);
             this.Controls.Add(this.btnSimulacija);
@@ -220,7 +210,6 @@
             this.Controls.Add(this.btnAstar);
             this.Controls.Add(this.btnObrisi);
             this.Controls.Add(this.gMapControl1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "zavrsni";
             this.ResumeLayout(false);
